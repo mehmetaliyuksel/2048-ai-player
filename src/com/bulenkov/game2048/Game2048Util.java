@@ -4,25 +4,22 @@ import java.util.*;
 
 public class Game2048Util {
 
-    public static boolean right(Tile[] tiles) {
+    public static CheckNewState right(Tile[] tiles) {
         tiles = rotate(tiles, 180);
         boolean canMoveRight = left(tiles);
-        tiles = rotate(tiles, 180);
-        return canMoveRight;
+        return new CheckNewState(canMoveRight, rotate(tiles, 180));
     }
 
-    public static boolean up(Tile[] tiles) {
+    public static CheckNewState up(Tile[] tiles) {
         tiles = rotate(tiles, 270);
         boolean canMoveUp = left(tiles);
-        tiles = rotate(tiles, 90);
-        return canMoveUp;
+        return new CheckNewState(canMoveUp, rotate(tiles, 90));
     }
 
-    public static boolean down(Tile[] tiles) {
+    public static CheckNewState down(Tile[] tiles) {
         tiles = rotate(tiles, 90);
         boolean canMoveDown = left(tiles);
-        tiles = rotate(tiles, 270);
-        return canMoveDown;
+        return new CheckNewState(canMoveDown, rotate(tiles, 270));
     }
 
     public static boolean left(Tile[] tiles) {

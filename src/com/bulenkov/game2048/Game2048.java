@@ -18,9 +18,12 @@ package com.bulenkov.game2048;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,10 +44,53 @@ public class Game2048 extends JPanel {
   public Game2048() {
     setPreferredSize(new Dimension(340, 400));
     setFocusable(true);
+    setVisible(true);
+
+    // Timer timer = new Timer(40, new ActionListener() {
+    // @Override
+    // public void actionPerformed(ActionEvent e) {
+
+    // if (!canMove()) {
+    // myLose = true;
+    // }
+
+    // if (!myWin && !myLose) {
+    // ExpectiMax expectiMax = new ExpectiMax();
+    // Tile[] newState = copyMyTiles(myTiles);
+    // switch (expectiMax.max(newState, 0, 1).getDirection()) {
+    // case LEFT:
+    // System.out.println("MOVES LEFT");
+    // left();
+    // break;
+    // case RIGHT:
+    // System.out.println("MOVES RIGHT");
+    // right();
+    // break;
+    // case DOWN:
+    // System.out.println("MOVES DOWN");
+    // down();
+    // break;
+    // case UP:
+    // System.out.println("MOVES UP");
+    // up();
+    // break;
+    // }
+    // }
+
+    // if (!myWin && !canMove()) {
+    // myLose = true;
+    // }
+
+    // repaint();
+    // }
+    // });
+
     addKeyListener(new KeyAdapter() {
 
       @Override
       public void keyPressed(KeyEvent e) {
+
+        // while (true) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
           resetGame();
         }
@@ -53,18 +99,23 @@ public class Game2048 extends JPanel {
         }
 
         if (!myWin && !myLose) {
-          AIPlayer aiPlayer = new AIPlayer();
-          switch (aiPlayer.getNextMove(myTiles, Ply.PLY_1)) {
+          ExpectiMax expectiMax = new ExpectiMax();
+          Tile[] newState = copyMyTiles(myTiles);
+          switch (expectiMax.max(newState, 0, 1).getDirection()) {
             case LEFT:
+              System.out.println("MOVES LEFT");
               left();
               break;
             case RIGHT:
+              System.out.println("MOVES RIGHT");
               right();
               break;
             case DOWN:
+              System.out.println("MOVES DOWN");
               down();
               break;
             case UP:
+              System.out.println("MOVES UP");
               up();
               break;
           }
@@ -73,11 +124,36 @@ public class Game2048 extends JPanel {
         if (!myWin && !canMove()) {
           myLose = true;
         }
+        try {
+          Robot robot = new Robot();
+          robot.keyPress(KeyEvent.VK_Y);
+
+        } catch (AWTException e1) {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
+
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException e1) {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
 
         repaint();
       }
+
     });
     resetGame();
+  }
+
+  public Tile[] copyMyTiles(Tile[] tiles) {
+    Tile[] newState = new Tile[tiles.length];
+
+    for (int i = 0; i < tiles.length; i++) {
+      newState[i] = new Tile(tiles[i].value);
+    }
+    return newState;
   }
 
   public void resetGame() {
@@ -231,7 +307,7 @@ public class Game2048 extends JPanel {
       if (i < 3 && oldLine[i].value == oldLine[i + 1].value) {
         num *= 2;
         myScore += num;
-        int ourTarget = 2048;
+        int ourTarget = 4096;
         if (num == ourTarget) {
           myWin = true;
         }
@@ -310,6 +386,7 @@ public class Game2048 extends JPanel {
       }
       if (myLose) {
         g.drawString("Game over!", 50, 130);
+        g.drawString("Your score is " + myScore, 70, 140);
         g.drawString("You lose!", 64, 200);
       }
       if (myWin || myLose) {
