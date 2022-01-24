@@ -36,12 +36,7 @@ public class Game2048Util {
             }
         }
 
-        if (needAddTile) {
-            // addTile();
-            return true;
-        }
-
-        return false;
+        return needAddTile;
     }
 
     private static Tile[] rotate(Tile[] tiles, int angle) {
@@ -142,7 +137,7 @@ public class Game2048Util {
 
     public static boolean addTile(Tile[] tiles) {
         List<Tile> list = availableSpace(tiles);
-        if (!availableSpace(tiles).isEmpty()) {
+        if (!list.isEmpty()) {
             int index = (int) (Math.random() * list.size()) % list.size();
             Tile emptyTime = list.get(index);
             emptyTime.value = Math.random() < 0.9 ? 2 : 4;
@@ -151,7 +146,13 @@ public class Game2048Util {
         return false;
     }
 
-    private static List<Tile> availableSpace(Tile[] tiles) {
+    public static boolean addOneTile(Tile tile) {
+        tile.value = Math.random() < 0.9 ? 2 : 4;
+
+        return tile.value == 2;
+    }
+
+    public static List<Tile> availableSpace(Tile[] tiles) {
         final List<Tile> list = new ArrayList<Tile>(16);
         for (Tile t : tiles) {
             if (t.isEmpty()) {
@@ -182,7 +183,7 @@ public class Game2048Util {
     }
 
     private static boolean isFull(int availableSpace) {
-    return availableSpace == 0;
-  }
+        return availableSpace == 0;
+    }
 
 }
