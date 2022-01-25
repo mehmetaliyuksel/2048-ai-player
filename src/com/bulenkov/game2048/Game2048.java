@@ -101,7 +101,7 @@ public class Game2048 extends JPanel {
         if (!myWin && !myLose) {
           ExpectiMax expectiMax = new ExpectiMax();
           Tile[] newState = copyMyTiles(myTiles);
-          switch (expectiMax.max(newState, 0, 1).getDirection()) {
+          switch (expectiMax.max(newState, 0, 2).getDirection()) {
             case LEFT:
               System.out.println("MOVES LEFT");
               left();
@@ -124,21 +124,21 @@ public class Game2048 extends JPanel {
         if (!myWin && !canMove()) {
           myLose = true;
         }
-        try {
-          Robot robot = new Robot();
-          robot.keyPress(KeyEvent.VK_Y);
+        // try {
+        // Robot robot = new Robot();
+        // robot.keyPress(KeyEvent.VK_Y);
 
-        } catch (AWTException e1) {
-          // TODO Auto-generated catch block
-          e1.printStackTrace();
-        }
+        // } catch (AWTException e1) {
+        // // TODO Auto-generated catch block
+        // e1.printStackTrace();
+        // }
 
-        try {
-          Thread.sleep(100);
-        } catch (InterruptedException e1) {
-          // TODO Auto-generated catch block
-          e1.printStackTrace();
-        }
+        // try {
+        // Thread.sleep(5000);
+        // } catch (InterruptedException e1) {
+        // // TODO Auto-generated catch block
+        // e1.printStackTrace();
+        // }
 
         repaint();
       }
@@ -386,7 +386,6 @@ public class Game2048 extends JPanel {
       }
       if (myLose) {
         g.drawString("Game over!", 50, 130);
-        g.drawString("Your score is " + myScore, 70, 140);
         g.drawString("You lose!", 64, 200);
       }
       if (myWin || myLose) {
