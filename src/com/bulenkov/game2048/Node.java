@@ -7,11 +7,29 @@ public class Node {
 
     private State state;
     private List<Node> children;
+    private Direction direction;
     private double value;
 
-    public Node(State state) {
-        this.setState(state);
-        this.children = new ArrayList<>();
+    public Node(State state, Direction direction) {
+        this.state = state;
+        children = new ArrayList<Node>();
+        this.direction = direction;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 
     public List<Node> getChildren() {
@@ -30,16 +48,9 @@ public class Node {
         this.state = state;
     }
 
-    public double getValue() {
-        return value;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
-    }
-
     public double getProbability() {
-        return (1 / getState().getAvailableSpace()) * (getState().isIs2NewlyAdded() ? 0.9 : 0.1);
+        int space = getState().getAvailableSpace();
+        return (1.0 / ((space == 0) ? 1 : space) * (getState().isIs2NewlyAdded() ? 0.9 : 0.1));
     }
 
 }

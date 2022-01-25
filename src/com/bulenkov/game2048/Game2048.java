@@ -100,8 +100,23 @@ public class Game2048 extends JPanel {
 
         if (!myWin && !myLose) {
           ExpectiMax expectiMax = new ExpectiMax();
-          Tile[] newState = copyMyTiles(myTiles);
-          switch (expectiMax.max(newState, 0, 2).getDirection()) {
+          Tile[] newStateTiles = copyMyTiles(myTiles);
+          State newState = new State(newStateTiles, true, 14);
+          Node root = new Node(newState, Direction.LEFT);
+
+          double max = 0;
+          Direction direction = Direction.LEFT;
+
+          Node rootN = expectiMax.expectiMax(root, true, 0, 3);
+
+          for (Node node : rootN.getChildren()) {
+            if (max <= node.getValue()) {
+              max = node.getValue();
+              direction = node.getDirection();
+            }
+          }
+          // switch (expectiMax.max(newState, 0, 3).getDirection()) {
+          switch (direction) {
             case LEFT:
               System.out.println("MOVES LEFT");
               left();
@@ -147,7 +162,7 @@ public class Game2048 extends JPanel {
     resetGame();
   }
 
-  public Tile[] copyMyTiles(Tile[] tiles) {
+  public static Tile[] copyMyTiles(Tile[] tiles) {
     Tile[] newState = new Tile[tiles.length];
 
     for (int i = 0; i < tiles.length; i++) {
