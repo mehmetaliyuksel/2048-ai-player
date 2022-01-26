@@ -9,7 +9,7 @@ public class ExpectiMax {
     public Result max(Tile[] state, int depth, int ply) {
 
         double maxUtility = 0;
-        Result result = null;// new Result(0, Direction.UP);
+        Result result = new Result(0, Direction.UP);
 
         // recursively traverse each next available state and set the max utility
 
@@ -86,8 +86,8 @@ public class ExpectiMax {
         List<Tile> availableSpacesOnBoard = Game2048Util.availableSpace(state);
         int numOfAvailableSpace = availableSpacesOnBoard.size();
 
-        if (numOfAvailableSpace == 0)
-            return heuristic1(state);
+        if (numOfAvailableSpace == 1)
+            System.out.println();;//heuristic1(state);
 
         for (int i = 0; i < numOfAvailableSpace; i++) {
             if (i > 0)
@@ -100,7 +100,12 @@ public class ExpectiMax {
 
             possibility = 0.1 * (1.0 / (numOfAvailableSpace));
             availableSpacesOnBoard.get(i).value = 4;
-            scores.add(possibility * max(state, depth + 1, ply).getUtility());
+            try {
+            scores.add(possibility * max(state, depth + 1, ply).getUtility());}
+            catch (Exception e){
+                e.printStackTrace();
+                System.out.println();
+            }
 
         }
 
@@ -164,6 +169,26 @@ public class ExpectiMax {
                 13, 10, 8, 8,
                 11, 11, 8, 8
         };
+
+        int[] WEIGHTMATRIX5 = {
+                310, 290, 270, 250,
+                220, 210, 200, 170,
+                150, 130, 110, 90,
+                70, 50, 30, 10
+        };
+        int[] WEIGHTMATRIX6 = {
+                310, 290, 270, 250,
+                200, 180, 160, 140,
+                100, 80, 60, 40,
+                10, 8, 6, 4
+        };
+
+        int[] WEIGHTMATRIX7 = {
+                310, 290, 270, 250,
+                200, 180, 160, 140,
+                100, 80, 60, 40,
+                10, 8, 6, 4
+        };
         int[] WEIGHTMATRIX3 = {
                 50, 30, 20, 20,
                 30, 20, 15, 15,
@@ -208,7 +233,7 @@ public class ExpectiMax {
                         mergeCounter++;
                 }
 
-                heur += WEIGHTMATRIX4[i] * state[i].value;
+                heur += WEIGHTMATRIX5[i] * state[i].value;
             }
         }
 
