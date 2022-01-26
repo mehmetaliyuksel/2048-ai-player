@@ -64,22 +64,17 @@ public class Game2048 extends JPanel {
                     ExpectiMax expectiMax = new ExpectiMax();
 
                     Tile[] newState = copyMyTiles(myTiles);
-                    switch (expectiMax.max(newState, 0, 4).getDirection()) {
-                        //switch (direction) {
+                    switch (expectiMax.max(newState, 0, 3).getDirection()) {
                         case LEFT:
-                            //System.out.println("MOVES LEFT");
                             left();
                             break;
                         case RIGHT:
-                            //System.out.println("MOVES RIGHT");
                             right();
                             break;
                         case DOWN:
-                            //System.out.println("MOVES DOWN");
                             down();
                             break;
                         case UP:
-                            //System.out.println("MOVES UP");
                             up();
                             break;
                     }

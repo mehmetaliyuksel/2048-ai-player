@@ -153,24 +153,5 @@ public class Game2048Util {
         return tiles[x + y * 4];
     }
 
-    public static boolean canMove(Tile[] tiles, int availableSpace) {
-        if (!isFull(availableSpace)) {
-            return true;
-        }
-        for (int x = 0; x < 4; x++) {
-            for (int y = 0; y < 4; y++) {
-                Tile t = tileAt(tiles, x, y);
-                if ((x < 3 && t.value == tileAt(tiles, x + 1, y).value)
-                        || ((y < 3) && t.value == tileAt(tiles, x, y + 1).value)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private static boolean isFull(int availableSpace) {
-        return availableSpace == 0;
-    }
 
 }
