@@ -209,26 +209,21 @@ public class ExpectiMax {
         List<Tile> availableSpacesOnBoard = Game2048Util.availableSpace(state);
         int numOfAvailableSpace = availableSpacesOnBoard.size();
 
-        if (numOfAvailableSpace - ply < 0)
+        if (numOfAvailableSpace == 0)
             return heuristic1(state);
 
         for (int i = 0; i < numOfAvailableSpace; i++) {
             if (i > 0)
                 availableSpacesOnBoard.get(i - 1).value = 0;
 
-            //boolean isNewlyAddedTileIs2 = Game2048Util.addOneTile(availableSpacesOnBoard.get(i));
-            //double possibility = (isNewlyAddedTileIs2) ? 0.9 * 1 / numOfAvailableSpace : 0.1 * 1 / numOfAvailableSpace;
-            //scores.add(possibility * max(state, depth + 1, ply).getUtility());
 
             availableSpacesOnBoard.get(i).value = 2;
-            double possibility = 0.9 * (1.0 / (numOfAvailableSpace) );
+            double possibility = 0.9 * (1.0 / (numOfAvailableSpace*2) );
             scores.add(possibility * max(state, depth + 1, ply).getUtility());
 
-            possibility = 0.1 * (1.0 / (numOfAvailableSpace));
+            possibility = 0.1 * (1.0 / (numOfAvailableSpace*2));
             availableSpacesOnBoard.get(i).value = 4;
             scores.add(possibility * max(state, depth + 1, ply).getUtility());
-
-
 
         }
 
@@ -242,7 +237,6 @@ public class ExpectiMax {
 
         double possibility = (isNewlyAddedTileIs2) ? 0.9 * 1 / numOfAvailableSpace : 0.1 * 1 / numOfAvailableSpace;
 
-            //System.out.println("********************************************* " + possibility + "  NUMM: " + numOfAvailableSpace);
         return possibility * heuristic1(state);
     }
 
@@ -250,7 +244,7 @@ public class ExpectiMax {
         List<Tile> availableSpacesOnBoard = Game2048Util.availableSpace(state);
         List<Double> scores = new ArrayList<>();
 
-        if (availableSpacesOnBoard.size() - ply < 0)
+        if (availableSpacesOnBoard.size()== 0)
             return heuristic1(state);
 
         for (int i = 0; i < availableSpacesOnBoard.size(); i++) {
@@ -262,12 +256,12 @@ public class ExpectiMax {
             availableSpacesOnBoard.get(i).value = 2;
             scores.add(evaluate(state,
                     true,
-                    availableSpacesOnBoard.size()));
+                    availableSpacesOnBoard.size()*2));
 
             availableSpacesOnBoard.get(i).value = 4;
             scores.add(evaluate(state,
                     false,
-                    availableSpacesOnBoard.size()));
+                    availableSpacesOnBoard.size()*2));
         }
 
         return scores.stream()
@@ -306,6 +300,12 @@ public class ExpectiMax {
                 Math.pow(2, 0), Math.pow(2, 1), Math.pow(2, 2), Math.pow(2, 3)
         };
 
+        double[] WEIGHTMATRIX4 =
+                {0.135759, 0.121925, 0.102812, 0.099937,
+                0.0997992, 0.0888405, 0.076711, 0.0724143,
+                0.060654, 0.0562579, 0.037116, 0.0161889,
+                0.0125498, 0.00992495, 0.00575871, 0.00335193};
+
         // int DEPTHMAP[] = { 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 4, 4,
         // 4, 4, 4, 4 };
 
@@ -331,7 +331,7 @@ public class ExpectiMax {
                         mergeCounter++;
                 }
 
-                heur += WEIGHTMATRIX3[i] * state[i].value;
+                heur += WEIGHTMATRIX4[i] * state[i].value;
             }
         }
 

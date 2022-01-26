@@ -91,21 +91,21 @@ public class Game2048 extends JPanel {
             public void keyPressed(KeyEvent e) {
 
                 //while (true) {
-                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                        resetGame();
-                    }
-                    if (!canMove()) {
-                        myLose = true;
-                    }
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    resetGame();
+                }
+                if (!canMove()) {
+                    myLose = true;
+                }
 
-                    if (!myWin && !myLose) {
-                        ExpectiMax expectiMax = new ExpectiMax();
-                        Tile[] newStateTiles = copyMyTiles(myTiles);
-                        State newState1 = new State(newStateTiles, true, 14);
-                        Node root = new Node(newState1, Direction.LEFT);
+                if (!myWin && !myLose) {
+                    ExpectiMax expectiMax = new ExpectiMax();
+                    Tile[] newStateTiles = copyMyTiles(myTiles);
+                    State newState1 = new State(newStateTiles, true, 14);
+                    Node root = new Node(newState1, Direction.LEFT);
 
-                        double max = 0;
-                        Direction direction = Direction.LEFT;
+                    double max = 0;
+                    Direction direction = Direction.LEFT;
 
 //          Node rootN = expectiMax.expectiMax(root, true, 0, 3);
 //
@@ -116,50 +116,50 @@ public class Game2048 extends JPanel {
 //            }
 //          }
 
-                        Tile[] newState = copyMyTiles(myTiles);
-                        switch (expectiMax.max(newState, 0, 3
-                        ).getDirection()) {
-                            //switch (direction) {
-                            case LEFT:
-                                System.out.println("MOVES LEFT");
-                                left();
-                                break;
-                            case RIGHT:
-                                System.out.println("MOVES RIGHT");
-                                right();
-                                break;
-                            case DOWN:
-                                System.out.println("MOVES DOWN");
-                                down();
-                                break;
-                            case UP:
-                                System.out.println("MOVES UP");
-                                up();
-                                break;
-                        }
+                    Tile[] newState = copyMyTiles(myTiles);
+                    switch (expectiMax.max(newState, 0, 3
+                    ).getDirection()) {
+                        //switch (direction) {
+                        case LEFT:
+                            System.out.println("MOVES LEFT");
+                            left();
+                            break;
+                        case RIGHT:
+                            System.out.println("MOVES RIGHT");
+                            right();
+                            break;
+                        case DOWN:
+                            System.out.println("MOVES DOWN");
+                            down();
+                            break;
+                        case UP:
+                            System.out.println("MOVES UP");
+                            up();
+                            break;
                     }
-
-                    if (!myWin && !canMove()) {
-                        myLose = true;
-                    }
-                    try {
-                        Robot robot = new Robot();
-                        robot.keyPress(KeyEvent.VK_Y);
-
-                    } catch (AWTException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
-
-                    try {
-                        Thread.sleep(31);
-                    } catch (InterruptedException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
-
-                    repaint();
                 }
+
+                if (!myWin && !canMove()) {
+                    myLose = true;
+                }
+                try {
+                    Robot robot = new Robot();
+                    robot.keyPress(KeyEvent.VK_Y);
+
+                } catch (AWTException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+
+                repaint();
+            }
             //y}
 
         });
@@ -326,7 +326,7 @@ public class Game2048 extends JPanel {
             if (i < 3 && oldLine[i].value == oldLine[i + 1].value) {
                 num *= 2;
                 myScore += num;
-                int ourTarget = 4096;
+                int ourTarget = 999999;
                 if (num == ourTarget) {
                     myWin = true;
                 }
@@ -396,20 +396,20 @@ public class Game2048 extends JPanel {
             g.drawString(s, xOffset + (TILE_SIZE - w) / 2, yOffset + TILE_SIZE - (TILE_SIZE - h) / 2 - 2);
 
         if (myWin || myLose) {
-            g.setColor(new Color(255, 255, 255, 30));
-            g.fillRect(0, 0, getWidth(), getHeight());
-            g.setColor(new Color(78, 139, 202));
+            //g.setColor(new Color(255, 255, 255, 30));
+            //g.fillRect(0, 0, getWidth(), getHeight());
+            //g.setColor(new Color(78, 139, 202));
             g.setFont(new Font(FONT_NAME, Font.BOLD, 48));
             if (myWin) {
                 g.drawString("You won!", 68, 150);
             }
-            if (myLose) {
-                g.drawString("Game over!", 50, 130);
-                g.drawString("You lose!", 64, 200);
-            }
+//            if (myLose) {
+//                g.drawString("Game over!", 50, 130);
+//                g.drawString("You lose!", 64, 200);
+//            }
             if (myWin || myLose) {
                 g.setFont(new Font(FONT_NAME, Font.PLAIN, 16));
-                g.setColor(new Color(128, 128, 128, 128));
+                //g.setColor(new Color(128, 128, 128, 128));
                 g.drawString("Press ESC to play again", 80, getHeight() - 40);
             }
         }
