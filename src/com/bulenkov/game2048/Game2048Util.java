@@ -94,11 +94,6 @@ public class Game2048Util {
             int num = oldLine[i].value;
             if (i < 3 && oldLine[i].value == oldLine[i + 1].value) {
                 num *= 2;
-                // myScore += num;
-                // int ourTarget = 2048;
-                // if (num == ourTarget) {
-                // myWin = true;
-                // }
                 i++;
             }
             list.add(new Tile(num));

@@ -5,140 +5,17 @@ import java.util.List;
 
 public class ExpectiMax {
 
-    // Getting expectimax
-    public Node expectiMax(Node node, boolean isMaxNode, int depth, int ply) {
-
-        addChildren(node, isMaxNode);
-        if (ply * 2 == depth + 1) {
-            if (node.getChildren().isEmpty()) {
-                double val = node.getProbability() * heuristic1(node.getState().getTiles());
-                if (Double.compare(val, (double) 0) == 0)
-                    System.out.println();
-                node.setValue(val);
-            } else {
-
-                double val = node.getChildren()
-                        .stream()
-                        .mapToDouble(child -> child.getProbability() * heuristic1(child.getState().getTiles()))
-                        .sum();
-                node.setValue(val);
-                if (Double.compare(val, (double) 0) == 0)
-                    System.out.println();
-            }
-            return node;
-        }
-
-        if (isMaxNode) {
-            // if (node.getChildren().isEmpty()) {
-            // //System.out.println();
-            // node.setValue(expectiMax(node, false, depth + 1, ply).getValue());
-            // } else {
-            node.setValue(node.getChildren()
-                    .stream()
-                    .mapToDouble(child -> {
-                        double val = expectiMax(child, false, depth + 1, ply).getValue();
-                        System.out.println("VALLLLLLLLL=== " + val);
-                        if (Double.compare(val, (double) 0) == 0)
-                            System.out.println();
-                        return val;
-                    })
-                    .max()
-                    .getAsDouble());
-            // }
-
-        } else {
-            // if (node.getChildren().isEmpty()) {
-            // //System.out.println();
-            // node.setValue(expectiMax(node, true, depth + 1, ply).getValue());
-            // } else {
-            node.setValue(node.getChildren()
-                    .stream()
-                    .mapToDouble(child -> {
-                        Node newNode = expectiMax(child, true, depth + 1, ply);
-                        return child.getProbability() * newNode.getValue();
-                    })
-                    .sum());
-            // }
-
-        }
-
-        return node;
-    }
-
-    public void addChildren(Node node, boolean isMaxDepth) {
-
-        if (!Game2048Util.canMove(node.getState().getTiles(), node.getState().getAvailableSpace()))
-            return;
-
-        if (isMaxDepth) {
-            Tile[] tiles = node.getState().getTiles().clone();
-
-            CheckNewState left = Game2048Util.left(tiles);
-            if (left.isCanMove()) {
-                Node newNode = new Node(
-                        new State(left.getTiles(), node.getState().isIs2NewlyAdded(), getAvailableSpace(tiles)),
-                        Direction.LEFT);
-                node.getChildren().add(newNode);
-            }
-
-            tiles = node.getState().getTiles().clone();
-            CheckNewState right = Game2048Util.right(tiles);
-            if (right.isCanMove()) {
-                Node newNode = new Node(
-                        new State(right.getTiles(), node.getState().isIs2NewlyAdded(), getAvailableSpace(tiles)),
-                        Direction.RIGHT);
-                node.getChildren().add(newNode);
-            }
-
-            tiles = node.getState().getTiles().clone();
-            CheckNewState down = Game2048Util.down(tiles);
-            if (down.isCanMove()) {
-                Node newNode = new Node(
-                        new State(down.getTiles(), node.getState().isIs2NewlyAdded(), getAvailableSpace(tiles)),
-                        Direction.DOWN);
-                node.getChildren().add(newNode);
-            }
-
-            tiles = node.getState().getTiles().clone();
-            CheckNewState up = Game2048Util.up(tiles);
-            if (up.isCanMove()) {
-                Node newNode = new Node(
-                        new State(up.getTiles(), node.getState().isIs2NewlyAdded(), getAvailableSpace(tiles)),
-                        Direction.UP);
-                node.getChildren().add(newNode);
-            }
-        } else {
-            for (int index = 0; index < node.getState().getAvailableSpace(); index++) {
-                Tile[] tiles = Game2048.copyMyTiles(node.getState().getTiles());
-                boolean isIs2NewlyAdded = Game2048Util.addTile(tiles);
-
-                Node newNode = new Node(new State(tiles, isIs2NewlyAdded, getAvailableSpace(tiles)), Direction.LEFT);
-                node.getChildren().add(newNode);
-            }
-        }
-
-    }
-
-    private int getAvailableSpace(Tile[] tiles) {
-        int counter = 0;
-        for (Tile t : tiles) {
-            if (t.isEmpty()) {
-                counter++;
-            }
-        }
-        return counter;
-    }
 
     public Result max(Tile[] state, int depth, int ply) {
 
         double maxUtility = 0;
-        Result result = new Result(0, Direction.UP);
+        Result result = null;// new Result(0, Direction.UP);
 
         // recursively traverse each next available state and set the max utility
-        // score
-        Tile[] newState = new Tile[state.length];
+
+        Tile[] newState;
         newState = Game2048.copyMyTiles(state);
-        // System.arraycopy(state, 0, newState, 0, state.length);
+
         CheckNewState left = Game2048Util.left(newState);
         if (left.isCanMove()) {
             double newUtility = chance(left.getTiles(), depth + 1, ply);
@@ -152,7 +29,7 @@ public class ExpectiMax {
             }
         }
         newState = Game2048.copyMyTiles(state);
-        // System.arraycopy(state, 0, newState, 0, state.length);
+
         CheckNewState right = Game2048Util.right(newState);
         if (right.isCanMove()) {
             double newUtility = chance(right.getTiles(), depth + 1, ply);
@@ -166,7 +43,7 @@ public class ExpectiMax {
         }
 
         newState = Game2048.copyMyTiles(state);
-        // System.arraycopy(state, 0, newState, 0, state.length);
+
         CheckNewState up = Game2048Util.up(newState);
         if (up.isCanMove()) {
             double newUtility = chance(up.getTiles(), depth + 1, ply);
@@ -179,7 +56,7 @@ public class ExpectiMax {
             }
         }
         newState = Game2048.copyMyTiles(state);
-        // System.arraycopy(state, 0, newState, 0, state.length);
+
         CheckNewState down = Game2048Util.down(newState);
         if (down.isCanMove()) {
             double newUtility = chance(down.getTiles(), depth + 1, ply);
@@ -218,10 +95,10 @@ public class ExpectiMax {
 
 
             availableSpacesOnBoard.get(i).value = 2;
-            double possibility = 0.9 * (1.0 / (numOfAvailableSpace*2) );
+            double possibility = 0.9 * (1.0 / (numOfAvailableSpace));
             scores.add(possibility * max(state, depth + 1, ply).getUtility());
 
-            possibility = 0.1 * (1.0 / (numOfAvailableSpace*2));
+            possibility = 0.1 * (1.0 / (numOfAvailableSpace));
             availableSpacesOnBoard.get(i).value = 4;
             scores.add(possibility * max(state, depth + 1, ply).getUtility());
 
@@ -244,7 +121,7 @@ public class ExpectiMax {
         List<Tile> availableSpacesOnBoard = Game2048Util.availableSpace(state);
         List<Double> scores = new ArrayList<>();
 
-        if (availableSpacesOnBoard.size()== 0)
+        if (availableSpacesOnBoard.size() == 0)
             return heuristic1(state);
 
         for (int i = 0; i < availableSpacesOnBoard.size(); i++) {
@@ -256,12 +133,12 @@ public class ExpectiMax {
             availableSpacesOnBoard.get(i).value = 2;
             scores.add(evaluate(state,
                     true,
-                    availableSpacesOnBoard.size()*2));
+                    availableSpacesOnBoard.size()));
 
             availableSpacesOnBoard.get(i).value = 4;
             scores.add(evaluate(state,
                     false,
-                    availableSpacesOnBoard.size()*2));
+                    availableSpacesOnBoard.size()));
         }
 
         return scores.stream()
@@ -302,9 +179,9 @@ public class ExpectiMax {
 
         double[] WEIGHTMATRIX4 =
                 {0.135759, 0.121925, 0.102812, 0.099937,
-                0.0997992, 0.0888405, 0.076711, 0.0724143,
-                0.060654, 0.0562579, 0.037116, 0.0161889,
-                0.0125498, 0.00992495, 0.00575871, 0.00335193};
+                        0.0997992, 0.0888405, 0.076711, 0.0724143,
+                        0.060654, 0.0562579, 0.037116, 0.0161889,
+                        0.0125498, 0.00992495, 0.00575871, 0.00335193};
 
         // int DEPTHMAP[] = { 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 4, 4,
         // 4, 4, 4, 4 };
@@ -335,7 +212,7 @@ public class ExpectiMax {
             }
         }
 
-         //return Math.pow(heur, Math.log(Game2048Util.availableSpace(state).size()));
+        //return Math.pow(heur, Math.log(Game2048Util.availableSpace(state).size()));
         //return heur * Math.pow(5, mergeCounter) * maxValue;
         // return 1;
         //System.out.println("++++++++++y+++++++++++++++++++++++++++++++++++++++++++ " + heur);

@@ -46,51 +46,12 @@ public class Game2048 extends JPanel {
         setFocusable(true);
         setVisible(true);
 
-        // Timer timer = new Timer(40, new ActionListener() {
-        // @Override
-        // public void actionPerformed(ActionEvent e) {
-
-        // if (!canMove()) {
-        // myLose = true;
-        // }
-
-        // if (!myWin && !myLose) {
-        // ExpectiMax expectiMax = new ExpectiMax();
-        // Tile[] newState = copyMyTiles(myTiles);
-        // switch (expectiMax.max(newState, 0, 1).getDirection()) {
-        // case LEFT:
-        // System.out.println("MOVES LEFT");
-        // left();
-        // break;
-        // case RIGHT:
-        // System.out.println("MOVES RIGHT");
-        // right();
-        // break;
-        // case DOWN:
-        // System.out.println("MOVES DOWN");
-        // down();
-        // break;
-        // case UP:
-        // System.out.println("MOVES UP");
-        // up();
-        // break;
-        // }
-        // }
-
-        // if (!myWin && !canMove()) {
-        // myLose = true;
-        // }
-
-        // repaint();
-        // }
-        // });
-
         addKeyListener(new KeyAdapter() {
 
             @Override
             public void keyPressed(KeyEvent e) {
 
-                //while (true) {
+
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     resetGame();
                 }
@@ -99,26 +60,11 @@ public class Game2048 extends JPanel {
                 }
 
                 if (!myWin && !myLose) {
+
                     ExpectiMax expectiMax = new ExpectiMax();
-                    Tile[] newStateTiles = copyMyTiles(myTiles);
-                    State newState1 = new State(newStateTiles, true, 14);
-                    Node root = new Node(newState1, Direction.LEFT);
-
-                    double max = 0;
-                    Direction direction = Direction.LEFT;
-
-//          Node rootN = expectiMax.expectiMax(root, true, 0, 3);
-//
-//          for (Node node : rootN.getChildren()) {
-//            if (max <= node.getValue()) {
-//              max = node.getValue();
-//              direction = node.getDirection();
-//            }
-//          }
 
                     Tile[] newState = copyMyTiles(myTiles);
-                    switch (expectiMax.max(newState, 0, 3
-                    ).getDirection()) {
+                    switch (expectiMax.max(newState, 0, 3).getDirection()) {
                         //switch (direction) {
                         case LEFT:
                             System.out.println("MOVES LEFT");
@@ -160,7 +106,6 @@ public class Game2048 extends JPanel {
 
                 repaint();
             }
-            //y}
 
         });
         resetGame();
