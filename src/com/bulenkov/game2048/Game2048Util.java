@@ -143,11 +143,6 @@ public class Game2048Util {
         return false;
     }
 
-    public static boolean addOneTile(Tile tile) {
-        tile.value = Math.random() < 0.9 ? 2 : 4;
-
-        return tile.value == 2;
-    }
 
     public static List<Tile> availableSpace(Tile[] tiles) {
         final List<Tile> list = new ArrayList<Tile>(16);
