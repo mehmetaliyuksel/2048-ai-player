@@ -19,9 +19,9 @@ public class ExpectiMax {
         CheckNewState left = Game2048Util.left(newState);
         if (left.isCanMove()) {
             double newUtility = chance(left.getTiles(), depth + 1, ply);
-            System.out.println(
-                    "DEPTH: " + depth + "-- LEFT : newUtil ----------" + newUtility + "------maxUtil :"
-                            + maxUtility);
+//            System.out.println(
+//                    "DEPTH: " + depth + "-- LEFT : newUtil ----------" + newUtility + "------maxUtil :"
+//                            + maxUtility);
 
             if (newUtility >= maxUtility) {
                 maxUtility = newUtility;
@@ -33,8 +33,8 @@ public class ExpectiMax {
         CheckNewState right = Game2048Util.right(newState);
         if (right.isCanMove()) {
             double newUtility = chance(right.getTiles(), depth + 1, ply);
-            System.out.println(
-                    "DEPTH: " + depth + "-- RIGHT : newUtil ---------- " + newUtility + "------maxUtil:" + maxUtility);
+//            System.out.println(
+//                    "DEPTH: " + depth + "-- RIGHT : newUtil ---------- " + newUtility + "------maxUtil:" + maxUtility);
 
             if (newUtility >= maxUtility) {
                 maxUtility = newUtility;
@@ -47,9 +47,9 @@ public class ExpectiMax {
         CheckNewState up = Game2048Util.up(newState);
         if (up.isCanMove()) {
             double newUtility = chance(up.getTiles(), depth + 1, ply);
-            System.out
-                    .println("DEPTH: " + depth + "-- UP : newUtil ----------" + newUtility +
-                            "------maxUtil :" + maxUtility);
+//            System.out
+//                    .println("DEPTH: " + depth + "-- UP : newUtil ----------" + newUtility +
+//                            "------maxUtil :" + maxUtility);
             if (newUtility >= maxUtility) {
                 maxUtility = newUtility;
                 result = new Result(newUtility, Direction.UP);
@@ -60,9 +60,9 @@ public class ExpectiMax {
         CheckNewState down = Game2048Util.down(newState);
         if (down.isCanMove()) {
             double newUtility = chance(down.getTiles(), depth + 1, ply);
-            System.out.println(
-                    "DEPTH: " + depth + "-- DOWN : newUtil ----------" + newUtility + "------maxUtil :"
-                            + maxUtility);
+//            System.out.println(
+//                    "DEPTH: " + depth + "-- DOWN : newUtil ----------" + newUtility + "------maxUtil :"
+//                            + maxUtility);
 
             if (newUtility >= maxUtility) {
                 maxUtility = newUtility;
@@ -86,9 +86,6 @@ public class ExpectiMax {
         List<Tile> availableSpacesOnBoard = Game2048Util.availableSpace(state);
         int numOfAvailableSpace = availableSpacesOnBoard.size();
 
-        if (numOfAvailableSpace == 1)
-            System.out.println();;//heuristic1(state);
-
         for (int i = 0; i < numOfAvailableSpace; i++) {
             if (i > 0)
                 availableSpacesOnBoard.get(i - 1).value = 0;
@@ -101,8 +98,8 @@ public class ExpectiMax {
             possibility = 0.1 * (1.0 / (numOfAvailableSpace));
             availableSpacesOnBoard.get(i).value = 4;
             try {
-            scores.add(possibility * max(state, depth + 1, ply).getUtility());}
-            catch (Exception e){
+                scores.add(possibility * max(state, depth + 1, ply).getUtility());
+            } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println();
             }
@@ -185,10 +182,18 @@ public class ExpectiMax {
 
         int[] WEIGHTMATRIX7 = {
                 310, 290, 270, 250,
-                200, 180, 160, 140,
-                100, 80, 60, 40,
-                10, 8, 6, 4
+                270, 250, 160, 140,
+                150, 130, 60, 40,
+                60, 40, 6, 4
         };
+
+        int[] WEIGHTMATRIX8 = {
+                310, 290, 270, 250,
+                270, 250, 160, 140,
+                150, 130, 60, 40,
+                60, 40, 6, 4
+        };
+
         int[] WEIGHTMATRIX3 = {
                 50, 30, 20, 20,
                 30, 20, 15, 15,
@@ -233,14 +238,22 @@ public class ExpectiMax {
                         mergeCounter++;
                 }
 
-                heur += WEIGHTMATRIX5[i] * state[i].value;
+                heur += WEIGHTMATRIX7[i] * state[i].value;
             }
         }
+        double sumFirstRow = 0;
+        for (int i = 0; i < 4; i++) {
+            sumFirstRow =+ state[i].value;
+        }
+
+        sumFirstRow = sumFirstRow / 4.0;
 
         //return Math.pow(heur, Math.log(Game2048Util.availableSpace(state).size()));
         //return heur * Math.pow(5, mergeCounter) * maxValue;
         // return 1;
         //System.out.println("++++++++++y+++++++++++++++++++++++++++++++++++++++++++ " + heur);
+        //return (heur * 0.7) + (Game2048Util.availableSpace(state).size() * 0.3);
+        //return (heur * 0.5) + (sumFirstRow * 0.5);
         return heur;
     }
 
